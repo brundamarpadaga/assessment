@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Bicycles</title>
+     <link rel="stylesheet" href="your-popup-styles.css">
+    <style>
+        /* Style the table */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style the forms container */
+        .form-container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        /* Style form elements */
+        form {
+            margin-top: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>List of Bicycles</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Brand</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="bicycle : ${bicycles}">
+                <td th:text="${bicycle.id}"></td>
+                <td th:text="${bicycle.brand}"></td>
+                <td th:text="${bicycle.stock}"></td>
+                <td>
+                    <form action="/bicycles/borrow" method="post">
+                        <input type="hidden" name="id" th:value="${bicycle.id}" />
+                        <button type="submit"  onclick="borrowCycle(${bicycle.stock})">Borrow</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-container">
+        <h1>Add Bicycle</h1>
+        <form action="/bicycles/add" method="post" th:object="${bicycle}">
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" required th:field="*{brand}">
+            
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" required th:field="*{stock}">
+            
+            <button type="submit">Add Bicycle</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h1>Restock Bicycle</h1>
+        <form action="/bicycles/restock" method="post">
+            <label for="restockId">Bicycle ID:</label>
+            <input type="number" id="restockId" name="id" required>
+            
+            <label for="restockQty">Quantity to Restock:</label>
+            <input type="number" id="restockQty" name="quantity" required>
+            
+            <button type="submit">Restock</button>
+        </form>
+    </div>
+    
+     <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-button" onclick="closePopup()">&times;</span>
+            <p>There is no stock available to borrow.</p>
+        </div>
+    </div>
+    
+     <!-- JavaScript to show/hide the popup -->
+    <script>
+        function borrowCycle(stock) {
+            if (stock > 0) {
+                // Allow borrowing
+                document.querySelector('form[action="/bicycles/borrow"]').submit();
+            } else {
+                // Show the popup
+                document.getElementById('popup').style.display = 'block';
+            }
+        }
+        
+        function closePopup() {
+            // Close the popup
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
