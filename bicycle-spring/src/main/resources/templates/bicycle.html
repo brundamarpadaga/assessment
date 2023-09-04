@@ -77,7 +77,12 @@
                         <input type="hidden" name="id" th:value="${bicycle.id}" />
                         <button type="submit"  onclick="borrowCycle(${bicycle.stock})">Borrow</button>
                     </form>
+                     <form action="/bicycles/return" method="post">
+				        <input type="hidden" name="id" th:value="${bicycle.id}" />
+				        <button type="submit">Return</button>
+				    </form>
                 </td>
+                
             </tr>
         </tbody>
     </table>

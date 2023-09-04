@@ -80,4 +80,16 @@ public class BicycleController {
 
         return "redirect:/bicycles";
     }
+    
+    @PostMapping("/return")
+    public String returnBicycle(@RequestParam int id) {
+        Bicycle bicycle = bicycleRepository.findById(id).orElse(null);
+        if (bicycle != null) {
+            // Increase the stock by 1 when returning a cycle
+            bicycle.setStock(bicycle.getStock() + 1);
+            bicycleRepository.save(bicycle);
+        }
+
+        return "redirect:/bicycles";
+    }
 }
